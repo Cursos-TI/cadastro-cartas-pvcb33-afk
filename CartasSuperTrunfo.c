@@ -1,100 +1,75 @@
 #include <stdio.h>
-#include <string.h>
 
-#define TOTAL_CARTAS 4
+#define TOTAL_ESTADOS 8
+#define CIDADES_POR_ESTADO 4
+#define TOTAL_CARTAS (TOTAL_ESTADOS * CIDADES_POR_ESTADO)
 
-typedef struct {
-    int codigo;
-    char estado[30];
-    char cidade[30];
+struct Carta {
+    char codigo[4];             // Ex: A01, B03
+    char nome_pais[50];         // Nome do país
+    char nome_estado[50];       // Nome do estado
+    char nome_cidade[50];       // Nome da cidade
+    int populacao;
+    float area;
+    float pib;
     int pontos_turisticos;
-    double pib;          // Produto Interno Bruto em bilhões de reais
-    double area_km2;     // Área em quilômetros quadrados
-} Carta;
-
-// Função para exibir os dados de uma carta
-void mostrarCarta(Carta c) {
-    printf("\n--- Carta Super Trunfo ---\n");
-    printf("Código: %d\n", c.codigo);
-    printf("Estado: %s\n", c.estado);
-    printf("Cidade: %s\n", c.cidade);
-    printf("Pontos Turísticos: %d\n", c.pontos_turisticos);
-    printf("PIB: R$ %.2f bilhões\n", c.pib);
-    printf("Área: %.2f km²\n", c.area_km2);
-}
-
-// Função para comparar as cartas com base no atributo escolhido
-int compararCartas(Carta c1, Carta c2, int atributo) {
-    switch (atributo) {
-        case 1: // Pontos turísticos
-            if (c1.pontos_turisticos == c2.pontos_turisticos) return 0;
-            return (c1.pontos_turisticos > c2.pontos_turisticos) ? 1 : 2;
-        case 2: // PIB
-            if (c1.pib == c2.pib) return 0;
-            return (c1.pib > c2.pib) ? 1 : 2;
-        case 3: // Área
-            if (c1.area_km2 == c2.area_km2) return 0;
-            return (c1.area_km2 > c2.area_km2) ? 1 : 2;
-        default:
-            return -1; // Atributo inválido
-    }
-}
+};
 
 int main() {
-    // Cartas disponíveis no jogo
-    Carta cartas[TOTAL_CARTAS] = {
-        {1, "São Paulo", "São Paulo", 20, 2800.00, 1521.11},
-        {2, "Rio de Janeiro", "Rio de Janeiro", 18, 460.00, 1200.00},
-        {3, "Paraná", "Curitiba", 12, 105.00, 430.90},
-        {4, "Bahia", "Salvador", 15, 78.00, 693.45}
-    };
+    struct Carta cartas[TOTAL_CARTAS];
 
-    int escolha1, escolha2, atributo;
+    printf("=== Cadastro de Cartas - Super Trunfo Países (códigos automáticos) ===\n\n");
 
-    printf("===== Super Trunfo: Cidades do Brasil =====\n");
+    int carta_index = 0;
 
-    // Seleção das cartas pelos jogadores
-    printf("\nJogador 1, escolha uma carta (1 a %d): ", TOTAL_CARTAS);
-    scanf("%d", &escolha1);
-    printf("Jogador 2, escolha uma carta (1 a %d): ", TOTAL_CARTAS);
-    scanf("%d", &escolha2);
+    for (char estado = 'A'; estado <= 'H'; estado++) {
+        for (int cidade = 1; cidade <= 4; cidade++) {
+            // Gerar código automaticamente
+            snprintf(cartas[carta_index].codigo, sizeof(cartas[carta_index].codigo), "%c%02d", estado, cidade);
 
-    // Validação das escolhas
-    if (escolha1 < 1 || escolha1 > TOTAL_CARTAS || escolha2 < 1 || escolha2 > TOTAL_CARTAS) {
-        printf("\n[ERRO] Escolha de carta inválida. Tente novamente.\n");
-        return 1;
+            printf("Carta %d de %d (Código: %s)\n", carta_index + 1, TOTAL_CARTAS, cartas[carta_index].codigo);
+
+            printf("Nome do país (ex: Brasil, Japão): ");
+            scanf(" %[^\n]", cartas[carta_index].nome_pais);
+
+            printf("Nome do estado (ex: São Paulo, Osaka): ");
+            scanf(" %[^\n]", cartas[carta_index].nome_estado);
+
+            printf("Nome da cidade (ex: Campinas, Kyoto): ");
+            scanf(" %[^\n]", cartas[carta_index].nome_cidade);
+
+            printf("População (ex: 1200000): ");
+            scanf("%d", &cartas[carta_index].populacao);
+
+            printf("Área (em km²) (ex: 1520.35): ");
+            scanf("%f", &cartas[carta_index].area);
+
+            printf("PIB (em bilhões) (ex: 78.4): ");
+            scanf("%f", &cartas[carta_index].pib);
+
+            printf("Número de pontos turísticos (ex: 12): ");
+            scanf("%d", &cartas[carta_index].pontos_turisticos);
+
+            printf("--------------------------\n");
+
+            carta_index++;
+        }
     }
 
-    // Seleção das cartas
-    Carta carta1 = cartas[escolha1 - 1];
-    Carta carta2 = cartas[escolha2 - 1];
+    // Exibindo as cartas cadastradas
+    printf("\n=== Cartas Cadastradas ===\n\n");
 
-    // Exibição das cartas
-    printf("\nCarta do Jogador 1:");
-    mostrarCarta(carta1);
-    printf("\nCarta do Jogador 2:");
-    mostrarCarta(carta2);
-
-    // Escolha do atributo de comparação
-    printf("\nEscolha o atributo para disputar:\n");
-    printf("1 - Pontos Turísticos\n");
-    printf("2 - PIB (em bilhões de R$)\n");
-    printf("3 - Área (em km²)\n");
-    printf("Digite o número do atributo: ");
-    scanf("%d", &atributo);
-
-    // Comparação e resultado
-    int vencedor = compararCartas(carta1, carta2, atributo);
-
-    printf("\n===== Resultado da Rodada =====\n");
-    if (vencedor == 1)
-        printf("Jogador 1 venceu!\n");
-    else if (vencedor == 2)
-        printf("Jogador 2 venceu!\n");
-    else if (vencedor == 0)
-        printf("Empate nos atributos escolhidos.\n");
-    else
-        printf("Atributo inválido! Nenhum vencedor.\n");
+    for (int i = 0; i < TOTAL_CARTAS; i++) {
+        printf("Código: %s\n", cartas[i].codigo);
+        printf("País: %s\n", cartas[i].nome_pais);
+        printf("Estado: %s\n", cartas[i].nome_estado);
+        printf("Cidade: %s\n", cartas[i].nome_cidade);
+        printf("População: %d\n", cartas[i].populacao);
+        printf("Área: %.2f km²\n", cartas[i].area);
+        printf("PIB: %.2f bilhões\n", cartas[i].pib);
+        printf("Pontos Turísticos: %d\n", cartas[i].pontos_turisticos);
+        printf("--------------------------\n");
+    }
 
     return 0;
 }
