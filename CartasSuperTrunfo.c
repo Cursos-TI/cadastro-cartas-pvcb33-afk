@@ -198,3 +198,155 @@ int main() {
 
     return 0;
 }
+
+  nivel mestre
+
+    #include <stdio.h>
+#include <string.h>
+
+typedef struct {
+    char codigo[4];
+    char pais[50];
+    char cidade[50];
+    double populacao; // milhões
+    double area;      // km²
+    double pib;       // bilhões USD
+    int pontosTuristicos;
+    double densidadePopulacional; // hab/km² (calculada)
+    double pibPerCapita;          // USD/hab (calculada)
+    double superPoder;            // soma total das propriedades
+} Carta;
+
+void calcularPropriedades(Carta *c) {
+    double popReal = c->populacao * 1000000.0; // converter para habitantes
+    c->densidadePopulacional = (c->area > 0) ? (popReal / c->area) : 0;
+    c->pibPerCapita = (popReal > 0) ? ((c->pib * 1e9) / popReal) : 0;
+
+    // Super Poder = soma de todas as propriedades numéricas (população, área, pib, pontos turísticos, densidade e pib per capita)
+    c->superPoder = c->populacao + c->area + c->pib + c->pontosTuristicos + c->densidadePopulacional + c->pibPerCapita;
+}
+
+void exibirCarta(Carta c) {
+    printf("Código: %s\n", c.codigo);
+    printf("País: %s\n", c.pais);
+    printf("Cidade: %s\n", c.cidade);
+    printf("População: %.2lf milhões\n", c.populacao);
+    printf("Área: %.2lf km²\n", c.area);
+    printf("PIB: %.2lf bilhões USD\n", c.pib);
+    printf("Pontos Turísticos: %d\n", c.pontosTuristicos);
+    printf("Densidade Populacional: %.2lf hab/km²\n", c.densidadePopulacional);
+    printf("PIB per capita: %.2lf USD/hab\n", c.pibPerCapita);
+    printf("Super Poder: %.2lf\n", c.superPoder);
+    printf("----------------------------------------\n");
+}
+
+void compararCartas(Carta c1, Carta c2) {
+    printf("\nComparando %s (%s) x %s (%s)\n\n", c1.cidade, c1.pais, c2.cidade, c2.pais);
+
+    // População (maior vence)
+    printf("População: %.2lf x %.2lf => ", c1.populacao, c2.populacao);
+    if (c1.populacao > c2.populacao) printf("🏆 %s\n", c1.cidade);
+    else if (c2.populacao > c1.populacao) printf("🏆 %s\n", c2.cidade);
+    else printf("Empate\n");
+
+    // Área (maior vence)
+    printf("Área: %.2lf x %.2lf => ", c1.area, c2.area);
+    if (c1.area > c2.area) printf("🏆 %s\n", c1.cidade);
+    else if (c2.area > c1.area) printf("🏆 %s\n", c2.cidade);
+    else printf("Empate\n");
+
+    // PIB (maior vence)
+    printf("PIB: %.2lf x %.2lf => ", c1.pib, c2.pib);
+    if (c1.pib > c2.pib) printf("🏆 %s\n", c1.cidade);
+    else if (c2.pib > c1.pib) printf("🏆 %s\n", c2.cidade);
+    else printf("Empate\n");
+
+    // Pontos Turísticos (maior vence)
+    printf("Pontos Turísticos: %d x %d => ", c1.pontosTuristicos, c2.pontosTuristicos);
+    if (c1.pontosTuristicos > c2.pontosTuristicos) printf("🏆 %s\n", c1.cidade);
+    else if (c2.pontosTuristicos > c1.pontosTuristicos) printf("🏆 %s\n", c2.cidade);
+    else printf("Empate\n");
+
+    // Densidade Populacional (menor vence)
+    printf("Densidade Populacional: %.2lf x %.2lf => ", c1.densidadePopulacional, c2.densidadePopulacional);
+    if (c1.densidadePopulacional < c2.densidadePopulacional) printf("🏆 %s\n", c1.cidade);
+    else if (c2.densidadePopulacional < c1.densidadePopulacional) printf("🏆 %s\n", c2.cidade);
+    else printf("Empate\n");
+
+    // PIB per capita (maior vence)
+    printf("PIB per capita: %.2lf x %.2lf => ", c1.pibPerCapita, c2.pibPerCapita);
+    if (c1.pibPerCapita > c2.pibPerCapita) printf("🏆 %s\n", c1.cidade);
+    else if (c2.pibPerCapita > c1.pibPerCapita) printf("🏆 %s\n", c2.cidade);
+    else printf("Empate\n");
+
+    // Super Poder (maior vence)
+    printf("Super Poder: %.2lf x %.2lf => ", c1.superPoder, c2.superPoder);
+    if (c1.superPoder > c2.superPoder) printf("🏆 %s\n", c1.cidade);
+    else if (c2.superPoder > c1.superPoder) printf("🏆 %s\n", c2.cidade);
+    else printf("Empate\n");
+}
+
+int main() {
+    Carta cartas[4];
+
+    // Dados fixos para os 4 exemplos
+    strcpy(cartas[0].codigo, "A01");
+    strcpy(cartas[0].pais, "Brasil");
+    strcpy(cartas[0].cidade, "São Paulo");
+    cartas[0].populacao = 12.3;
+    cartas[0].area = 1521.11;
+    cartas[0].pib = 430;
+    cartas[0].pontosTuristicos = 10;
+
+    strcpy(cartas[1].codigo, "B01");
+    strcpy(cartas[1].pais, "Japão");
+    strcpy(cartas[1].cidade, "Tóquio");
+    cartas[1].populacao = 13.9;
+    cartas[1].area = 2194.07;
+    cartas[1].pib = 2000;
+    cartas[1].pontosTuristicos = 15;
+
+    strcpy(cartas[2].codigo, "C01");
+    strcpy(cartas[2].pais, "EUA");
+    strcpy(cartas[2].cidade, "Nova York");
+    cartas[2].populacao = 8.4;
+    cartas[2].area = 783.8;
+    cartas[2].pib = 2000;
+    cartas[2].pontosTuristicos = 25;
+
+    strcpy(cartas[3].codigo, "D01");
+    strcpy(cartas[3].pais, "França");
+    strcpy(cartas[3].cidade, "Paris");
+    cartas[3].populacao = 2.1;
+    cartas[3].area = 105.4;
+    cartas[3].pib = 850;
+    cartas[3].pontosTuristicos = 30;
+
+    // Calcular propriedades derivadas e super poder para cada carta
+    for (int i = 0; i < 4; i++) {
+        calcularPropriedades(&cartas[i]);
+    }
+
+    printf("Cartas disponíveis:\n");
+    for (int i = 0; i < 4; i++) {
+        printf("%d - %s (%s) - Código: %s\n", i+1, cartas[i].cidade, cartas[i].pais, cartas[i].codigo);
+    }
+
+    int c1, c2;
+    printf("\nEscolha a primeira carta (1-4): ");
+    scanf("%d", &c1);
+    printf("Escolha a segunda carta (1-4): ");
+    scanf("%d", &c2);
+
+    if (c1 < 1 || c1 > 4 || c2 < 1 || c2 > 4 || c1 == c2) {
+        printf("Escolha inválida!\n");
+        return 1;
+    }
+
+    exibirCarta(cartas[c1-1]);
+    exibirCarta(cartas[c2-1]);
+
+    compararCartas(cartas[c1-1], cartas[c2-1]);
+
+    return 0;
+}
