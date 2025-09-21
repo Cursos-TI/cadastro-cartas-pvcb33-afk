@@ -1,75 +1,76 @@
 #include <stdio.h>
 
-#define TOTAL_ESTADOS 8
-#define CIDADES_POR_ESTADO 4
-#define TOTAL_CARTAS (TOTAL_ESTADOS * CIDADES_POR_ESTADO)
+#define PAISES 4
+#define CIDADES 4
 
-struct Carta {
-    char codigo[4];             // Ex: A01, B03
-    char nome_pais[50];         // Nome do país
-    char nome_estado[50];       // Nome do estado
-    char nome_cidade[50];       // Nome da cidade
+typedef struct {
+    char nome[50];
     int populacao;
     float area;
-    float pib;
-    int pontos_turisticos;
-};
+    double pib;
+    int pontosTuristicos;
+} Cidade;
+
+typedef struct {
+    char nome[50];
+    Cidade cidades[CIDADES];
+} Pais;
 
 int main() {
-    struct Carta cartas[TOTAL_CARTAS];
-
-    printf("=== Cadastro de Cartas - Super Trunfo Países (códigos automáticos) ===\n\n");
-
-    int carta_index = 0;
-
-    for (char estado = 'A'; estado <= 'H'; estado++) {
-        for (int cidade = 1; cidade <= 4; cidade++) {
-            // Gerar código automaticamente
-            snprintf(cartas[carta_index].codigo, sizeof(cartas[carta_index].codigo), "%c%02d", estado, cidade);
-
-            printf("Carta %d de %d (Código: %s)\n", carta_index + 1, TOTAL_CARTAS, cartas[carta_index].codigo);
-
-            printf("Nome do país (ex: Brasil, Japão): ");
-            scanf(" %[^\n]", cartas[carta_index].nome_pais);
-
-            printf("Nome do estado (ex: São Paulo, Osaka): ");
-            scanf(" %[^\n]", cartas[carta_index].nome_estado);
-
-            printf("Nome da cidade (ex: Campinas, Kyoto): ");
-            scanf(" %[^\n]", cartas[carta_index].nome_cidade);
-
-            printf("População (ex: 1200000): ");
-            scanf("%d", &cartas[carta_index].populacao);
-
-            printf("Área (em km²) (ex: 1520.35): ");
-            scanf("%f", &cartas[carta_index].area);
-
-            printf("PIB (em bilhões) (ex: 78.4): ");
-            scanf("%f", &cartas[carta_index].pib);
-
-            printf("Número de pontos turísticos (ex: 12): ");
-            scanf("%d", &cartas[carta_index].pontos_turisticos);
-
-            printf("--------------------------\n");
-
-            carta_index++;
+    Pais paises[PAISES] = {
+        {
+            "Brasil",
+            {
+                {"São Paulo", 12300000, 1521.11, 430.00, 10},
+                {"Rio de Janeiro", 6748000, 1182.30, 210.00, 12},
+                {"Brasília", 3055149, 5802.00, 65.00, 7},
+                {"Salvador", 2886698, 693.45, 45.00, 6}
+            }
+        },
+        {
+            "Japão",
+            {
+                {"Tóquio", 13960000, 2194.07, 2000.00, 15},
+                {"Osaka", 2715000, 223.00, 670.00, 10},
+                {"Kyoto", 1464000, 827.83, 150.00, 18},
+                {"Hiroshima", 1193000, 905.00, 120.00, 8}
+            }
+        },
+        {
+            "Estados Unidos",
+            {
+                {"Nova York", 8419600, 783.80, 2000.00, 25},
+                {"Los Angeles", 3980000, 1302.00, 1100.00, 20},
+                {"Chicago", 2716000, 589.00, 689.00, 12},
+                {"Miami", 442241, 143.00, 345.00, 14}
+            }
+        },
+        {
+            "França",
+            {
+                {"Paris", 2161000, 105.40, 850.00, 30},
+                {"Marselha", 870000, 240.62, 60.00, 9},
+                {"Lyon", 522000, 47.87, 75.00, 6},
+                {"Nice", 340000, 71.92, 45.00, 7}
+            }
         }
-    }
+    };
 
-    // Exibindo as cartas cadastradas
-    printf("\n=== Cartas Cadastradas ===\n\n");
+    // Exibição dos dados
+    printf("📋 Cartas cadastradas (Nível Novato - Super Trunfo - Países)\n");
 
-    for (int i = 0; i < TOTAL_CARTAS; i++) {
-        printf("Código: %s\n", cartas[i].codigo);
-        printf("País: %s\n", cartas[i].nome_pais);
-        printf("Estado: %s\n", cartas[i].nome_estado);
-        printf("Cidade: %s\n", cartas[i].nome_cidade);
-        printf("População: %d\n", cartas[i].populacao);
-        printf("Área: %.2f km²\n", cartas[i].area);
-        printf("PIB: %.2f bilhões\n", cartas[i].pib);
-        printf("Pontos Turísticos: %d\n", cartas[i].pontos_turisticos);
-        printf("--------------------------\n");
+    for (int i = 0; i < PAISES; i++) {
+        printf("\n🌐 País: %s\n", paises[i].nome);
+        for (int j = 0; j < CIDADES; j++) {
+            Cidade c = paises[i].cidades[j];
+            printf("\n🏙️  Cidade: %s\n", c.nome);
+            printf("👥 População: %d habitantes\n", c.populacao);
+            printf("🌍 Área: %.2f km²\n", c.area);
+            printf("💰 PIB: %.2lf bilhões de dólares\n", c.pib);
+            printf("🏛️ Pontos turísticos: %d\n", c.pontosTuristicos);
+        }
     }
 
     return 0;
 }
+
